@@ -5,7 +5,6 @@ import { AvatarHeadDecapComponent } from '../avatar/components/AvatarIKComponent
 import { FollowCameraComponent } from '../camera/components/FollowCameraComponent'
 import { ButtonInputStateType, createInitialButtonState } from '../input/InputState'
 import { SkyboxComponent } from '../scene/components/SkyboxComponent'
-import { updateSkybox } from '../scene/functions/loaders/SkyboxFunctions'
 import { matches } from './../common/functions/MatchesUtils'
 import { Engine } from './../ecs/classes/Engine'
 import { addComponent, defineQuery, getComponent, hasComponent } from './../ecs/functions/ComponentFunctions'
@@ -93,8 +92,6 @@ export const requestXRSession = createHookableFunction(
         xrState.originReferenceSpace.set(null)
         xrState.viewerReferenceSpace.set(null)
 
-        const skybox = skyboxQuery()[0]
-        if (skybox) updateSkybox(skybox)
         dispatchAction(XRAction.sessionChanged({ active: false }))
       }
       xrManager.addEventListener('sessionend', onSessionEnd)

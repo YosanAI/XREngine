@@ -105,12 +105,6 @@ import { deserializeOcean, serializeOcean, updateOcean } from '../functions/load
 import { deserializePortal, serializePortal, updatePortal } from '../functions/loaders/PortalFunctions'
 import { enterScenePreviewCamera, serializeScenePreviewCamera } from '../functions/loaders/ScenePreviewCameraFunctions'
 import { updateShadow } from '../functions/loaders/ShadowFunctions'
-import {
-  deserializeSkybox,
-  serializeSkybox,
-  shouldDeserializeSkybox,
-  updateSkybox
-} from '../functions/loaders/SkyboxFunctions'
 import { deserializeSpline, serializeSpline } from '../functions/loaders/SplineFunctions'
 import { deserializeWater } from '../functions/loaders/WaterFunctions'
 
@@ -238,9 +232,7 @@ export default async function SceneObjectUpdateSystem(world: World) {
 
   world.sceneComponentRegistry.set(SkyboxComponent.name, SCENE_COMPONENT_SKYBOX)
   world.sceneLoadingRegistry.set(SCENE_COMPONENT_SKYBOX, {
-    defaultData: {},
-    deserialize: deserializeSkybox,
-    serialize: serializeSkybox
+    defaultData: {}
   })
 
   world.scenePrefabRegistry.set(ScenePrefabs.envMapbake, [
@@ -400,7 +392,6 @@ export default async function SceneObjectUpdateSystem(world: World) {
     for (const action of modifyPropertyActionQueue()) {
       for (const entity of action.entities) {
         if (hasComponent(entity, EnvmapComponent) && hasComponent(entity, GroupComponent)) updateEnvMap(entity)
-        if (hasComponent(entity, SkyboxComponent)) updateSkybox(entity)
         if (hasComponent(entity, PortalComponent)) updatePortal(entity)
         if (hasComponent(entity, GroundPlaneComponent)) updateGroundPlane(entity)
         if (hasComponent(entity, LoopAnimationComponent)) updateLoopAnimation(entity)
@@ -412,7 +403,6 @@ export default async function SceneObjectUpdateSystem(world: World) {
 
     for (const entity of envmapQuery.enter()) updateEnvMap(entity)
     for (const entity of loopableAnimationQuery.enter()) updateLoopAnimation(entity)
-    for (const entity of skyboxQuery.enter()) updateSkybox(entity)
     for (const _ of skyboxQuery.exit()) Engine.instance.currentWorld.scene.background = new Color('black')
     for (const entity of portalQuery.enter()) updatePortal(entity)
     for (const entity of groundPlaneQuery.enter()) updateGroundPlane(entity)

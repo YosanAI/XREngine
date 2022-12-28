@@ -20,7 +20,6 @@ import {
 } from '../../ecs/functions/ComponentFunctions'
 import { EngineRenderer } from '../../renderer/WebGLRendererSystem'
 import { SkyboxComponent } from '../../scene/components/SkyboxComponent'
-import { updateSkybox } from '../../scene/functions/loaders/SkyboxFunctions'
 import { PersistentAnchorComponent } from '../XRAnchorComponents'
 import { endXRSession, requestXRSession } from '../XRSessionFunctions'
 import { XRAction, XRState } from '../XRState'
@@ -393,8 +392,6 @@ export default async function XR8System(world: World) {
       document.body.removeEventListener('touchend', onTouchEnd)
 
       addComponent(world.cameraEntity, FollowCameraComponent, prevFollowCamera)
-      const skybox = skyboxQuery()[0]
-      if (skybox) updateSkybox(skybox)
       dispatchAction(XRAction.sessionChanged({ active: false }))
     }
   }
