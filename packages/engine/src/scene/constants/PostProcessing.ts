@@ -12,14 +12,15 @@ import {
   Resolution,
   SMAAEffect,
   SMAAPreset,
-  SSAOEffect,
+  //SSAOEffect,
   ToneMappingEffect
 } from 'postprocessing'
 import { SSREffect } from 'screen-space-reflections'
-import { ColorRepresentation, Texture } from 'three'
+import { ColorRepresentation, Texture, WebGLRenderTarget } from 'three'
 
 import { FXAAEffect } from '../../renderer/effects/FXAAEffect'
 import { LinearTosRGBEffect } from '../../renderer/effects/LinearTosRGBEffect'
+import { SSAOEffect } from '../../renderer/effects/SSAOEffect'
 
 export enum Effects {
   // FXAAEffect = 'FXAAEffect',
@@ -81,7 +82,7 @@ export type OutlineEffectProps = EffectProps & {
   blur: boolean
   xRay: boolean
 }
-
+/*
 export type SSAOEffectProps = EffectProps & {
   distanceScaling: boolean
   depthAwareUpsampling: boolean
@@ -95,6 +96,9 @@ export type SSAOEffectProps = EffectProps & {
   intensity: number
   fade: number
 }
+*/
+
+export type SSAOEffectProps = EffectProps & {}
 
 const defaultSSROptions = {
   intensity: 1,
@@ -207,10 +211,10 @@ export const defaultPostProcessingSchema: EffectPropsSchema = {
   },
   [Effects.SSAOEffect]: {
     isActive: false,
-    blendFunction: BlendFunction.MULTIPLY,
-    distanceScaling: true,
-    depthAwareUpsampling: true,
-    samples: 16,
+    blendFunction: BlendFunction.MULTIPLY
+    /*distanceScaling: true,
+    //depthAwareUpsampling: true,
+    //samples: 16,
     rings: 7,
     distanceThreshold: 0.125, // Render up to a distance of ~20 world units
     distanceFalloff: 0.02, // with an additional ~2.5 units of falloff.
@@ -218,7 +222,7 @@ export const defaultPostProcessingSchema: EffectPropsSchema = {
     bias: 0.25,
     radius: 0.01,
     intensity: 2,
-    fade: 0.05
+    fade: 0.05*/
   },
   [Effects.SSREffect]: {
     isActive: false,
