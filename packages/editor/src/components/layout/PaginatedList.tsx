@@ -1,19 +1,19 @@
 import React, { JSXElementConstructor, useEffect } from 'react'
 
 import { any } from '@xrengine/engine/src/common/functions/MatchesUtils'
-import { useHookstate } from '@xrengine/hyperflux'
+import { State, useHookstate } from '@xrengine/hyperflux'
 
 import { Grid, Stack } from '@mui/material'
 
 import { Button } from '../inputs/Button'
 import Well from './Well'
 
-export default function PaginatedList({
+export default function PaginatedList<T>({
   list,
   element,
   options
 }: {
-  ['list']: any[]
+  ['list']: T[] | State<T[]>
   ['element']: any
   ['options']?: {
     ['countPerPage']?: number
@@ -24,7 +24,7 @@ export default function PaginatedList({
 
   function getPageIndices() {
     const start = countPerPage * currentPage.value
-    return [start, Math.min(start + countPerPage, list.length - 1)]
+    return [start, Math.min(start + countPerPage, list.length /*- 1*/)]
   }
 
   const pageView = useHookstate(getPageIndices())
@@ -67,7 +67,9 @@ export default function PaginatedList({
           })}
           <Grid item xs={1}>
             <Button
-              onClick={() => currentPage.set(Math.min(list.length - 1, Math.max(0, currentPage.value + 1)))}
+              onClick={() =>
+                currentPage.set(Math.min(Math.floor(list.length / countPerPage), Math.max(0, currentPage.value + 1)))
+              }
               style={{ width: 'auto' }}
             >
               +

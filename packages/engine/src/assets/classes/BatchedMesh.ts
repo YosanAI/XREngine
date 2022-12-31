@@ -394,10 +394,27 @@ export function convertToBatchedMesh(meshes: Mesh[]) {
   const totalIndices = meshes.map((mesh) => mesh.geometry.index!.count).reduce((x, y) => x + y)
   const material = meshes[0].material
   const result = new BatchedMesh(numMeshes, totalVertices, totalIndices, material)
-  meshes.map((mesh) => {
-    const geoId = result.applyGeometry(mesh.geometry)
-    result.setMatrixAt(geoId, mesh.matrixWorld)
-  })
+  const sortedMeshes = meshes
+    .sort((mesh1, mesh2) => {
+      const attrs = ['position', 'uv', 'normal']
+      let attrs1 = 0
+      let attrs2 = 0
+      for (const attr in attrs) {
+        if (mesh1.geometry.hasAttribute(attr)) attrs1++
+        if (mesh2.geometry.hasAttribute(attr)) attrs2++
+      }
+      return Math.sign(attrs1 - attrs2)
+    })
+    .reverse()
+  sortedMeshes
+    .filter((mesh) => ['position', 'uv'].every(mesh.geometry.hasAttribute.bind(mesh.geometry)))
+    .map((mesh) => {
+      Object.keys(mesh.geometry.attributes)
+        .filter((name) => name.startsWith('_'))
+        .map(mesh.geometry.deleteAttribute.bind(mesh.geometry))
+      const geoId = result.applyGeometry(mesh.geometry)
+      result.setMatrixAt(geoId, mesh.matrixWorld)
+    })
   return result
 }
 
