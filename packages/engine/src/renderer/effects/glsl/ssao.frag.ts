@@ -2,7 +2,6 @@ import { Matrix4, Vector2, Vector3 } from 'three'
 
 const EffectShader = {
   uniforms: {
-    sceneDiffuse: { value: null },
     sceneDepth: { value: null },
     projMat: { value: new Matrix4() },
     viewMat: { value: new Matrix4() },
@@ -16,25 +15,20 @@ const EffectShader = {
       value: [
         [1, 0, 0],
         [0, 1, 0],
-        [0, 0, 1]
+        [0, 0, 1],
+        [-1, 0, 0],
+        [0, -1, 0],
+        [0, 0, -1]
       ].map((x) => new Vector3(...x))
     },
-    samplesR: { value: [1, 1, 1] },
+    samplesR: { value: [5, 2, 3, 1, 4, 2] },
     bluenoise: { value: null },
     radius: { value: 5.0 }
   },
-
-  vertexShader: /* glsl */ `
-varying vec2 vUv;
-void main() {
-  vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-}`,
-
   fragmentShader: /* glsl */ `
-    #define SAMPLES 16
-    #define FSAMPLES 16.0
-uniform sampler2D sceneDiffuse;
+    #define SAMPLES 6
+    #define FSAMPLES 6.0
+
 uniform sampler2D sceneDepth;
 uniform mat4 projectionMatrixInv;
 uniform mat4 viewMatrixInv;
@@ -48,7 +42,7 @@ uniform vec3[SAMPLES] samples;
 uniform float[SAMPLES] samplesR;
 uniform float radius;
 uniform sampler2D bluenoise;
-    varying vec2 vUv;
+
     highp float linearize_depth(highp float d, highp float zNear,highp float zFar)
     {
         highp float z_n = 2.0 * d - 1.0;
@@ -158,21 +152,10 @@ float random( vec2  v ) { return floatConstruct(hash(floatBitsToUint(v))); }
 float random( vec3  v ) { return floatConstruct(hash(floatBitsToUint(v))); }
 float random( vec4  v ) { return floatConstruct(hash(floatBitsToUint(v))); }
 
-float rand()
-{
-/*float result = fract(sin(seed + mod(time, 1000.0) + dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
-//_Seed += 1.0;
-seed += 1.0;
-return result;*/
-float result = random(vec4(gl_FragCoord.xy, seed, time));
-seed += 1.0;
-return result;
-}
-void main() {
-      vec4 diffuse = texture2D(sceneDiffuse, vUv);
+void mainImage(const in vec4 inputColor, const in vec2 vUv, out vec4 outputColor) {
       float depth = texture2D(sceneDepth, vUv).x;
       if (depth == 1.0) {
-        gl_FragColor = vec4(vec3(1.0), 1.0);
+        outputColor = inputColor * vec4(vec3(1.0), 1.0);
         return;
       }
       vec3 worldPos = getWorldPos(depth, vUv);
@@ -186,7 +169,7 @@ void main() {
           sampleDirection *= -1.0;
         }
         float moveAmt = samplesR[int(mod(i + noise.a * FSAMPLES, FSAMPLES))];
-        vec3 samplePos = worldPos + radius * moveAmt * sampleDirection;
+        vec3 samplePos = worldPos + sampleDirection * radius * moveAmt;
         vec4 offset = projViewMat * vec4(samplePos, 1.0);
         offset.xyz /= offset.w;
         offset.xyz = offset.xyz * 0.5 + 0.5;
@@ -197,11 +180,11 @@ void main() {
         if (distSample < distWorld) {
           occluded += rangeCheck * dot(sampleDirection, normal);
         }
-
       }
       float occ = clamp(1.0 - occluded / FSAMPLES, 0.0, 1.0);
-      gl_FragColor = vec4(0.5 + 0.5 * normal, occ);
-}`
+      outputColor = vec4(0.5 + 0.5 * normal, occ);
+      outputColor = inputColor * (1.0 - occ);
+    }`
 }
 
 export default EffectShader

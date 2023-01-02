@@ -229,7 +229,8 @@ export const updateSceneFromJSON = async (sceneData: SceneData) => {
   if (sceneData.scene.metadata) {
     for (const [key, val] of Object.entries(sceneData.scene.metadata)) {
       if (!world.sceneMetadataRegistry[key]) continue
-      world.sceneMetadataRegistry[key].state.merge(merge({}, world.sceneMetadataRegistry[key].state.value, val))
+      const state = world.sceneMetadataRegistry[key].state
+      state.set({ ...(state.value ?? {}), ...val })
     }
   }
 

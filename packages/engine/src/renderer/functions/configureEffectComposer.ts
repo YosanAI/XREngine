@@ -49,6 +49,8 @@ export const configureEffectComposer = (remove?: boolean, camera = Engine.instan
     resolutionScale: 0.5
   })
 
+  const composer = EngineRenderer.instance.effectComposer
+
   for (let key of effectKeys) {
     const effect = postProcessingEffects[key]
 
@@ -58,28 +60,29 @@ export const configureEffectComposer = (remove?: boolean, camera = Engine.instan
     if (!effectClass) return
 
     if (key === Effects.SSAOEffect) {
-      const eff = new effectClass(camera, normalPass.texture, {
+      /*const eff = new effectClass(camera, normalPass.texture, {
         ...effect,
         normalDepthBuffer: depthDownsamplingPass.texture
-      })
-      EngineRenderer.instance.effectComposer[key] = eff
+      })*/
+      const eff = new effectClass(EngineRenderer.instance.renderer, composer.inputBuffer)
+      composer[key] = eff
       effects.push(eff)
     } else if (key === Effects.SSREffect) {
       const eff = new effectClass(Engine.instance.currentWorld.scene, camera, effect)
-      EngineRenderer.instance.effectComposer[key] = eff
+      composer[key] = eff
       effects.push(eff)
     } else if (key === Effects.DepthOfFieldEffect) {
       const eff = new effectClass(camera, effect)
-      EngineRenderer.instance.effectComposer[key] = eff
+      composer[key] = eff
       effects.push(eff)
     } else if (key === Effects.OutlineEffect) {
       const eff = new effectClass(Engine.instance.currentWorld.scene, camera, effect)
-      EngineRenderer.instance.effectComposer[key] = eff
+      composer[key] = eff
       effects.push(eff)
     } else {
       if (effectClass) {
         const eff = new effectClass(effect)
-        EngineRenderer.instance.effectComposer[key] = eff
+        composer[key] = eff
         effects.push(eff)
       }
     }
