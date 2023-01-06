@@ -29,8 +29,10 @@ import { ObjectLayers } from '../constants/ObjectLayers'
 import { PlayMode } from '../constants/PlayMode'
 import { addError, clearErrors, removeError } from '../functions/ErrorFunctions'
 import isHLS from '../functions/isHLS'
+import { Volumetric } from '../functions/loaders/VolumetricFunctions'
 import { setObjectLayers } from '../functions/setObjectLayers'
 import { addObjectToGroup, removeObjectFromGroup } from './GroupComponent'
+import { VolumetricComponent } from './VolumetricComponent'
 
 const AUDIO_TEXTURE_PATH = '/static/editor/audio-icon.png'
 
@@ -256,6 +258,11 @@ export function MediaReactor({ root }: EntityReactorProps) {
   useEffect(
     function updatePausedUponInteract() {
       if (userHasInteracted.value && media.autoplay.value) media.paused.set(false)
+      // hack to make vol work - @TODO move to VolumetricComponent reactor
+      if (userHasInteracted.value && hasComponent(entity, VolumetricComponent) && mediaElement?.value) {
+        const player = Volumetric.get(mediaElement.element.value)
+        if (player) player._hasPlayed = true
+      }
     },
     [userHasInteracted]
   )

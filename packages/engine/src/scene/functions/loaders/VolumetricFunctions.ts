@@ -36,7 +36,7 @@ if (isClient) {
   VolumetricPlayerPromise = import('@xrfoundation/volumetric/player').then((module) => module.default)
 }
 
-const Volumetric = new WeakMap<
+export const Volumetric = new WeakMap<
   HTMLMediaElement,
   {
     entity: Entity
