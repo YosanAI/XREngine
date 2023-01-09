@@ -1,7 +1,8 @@
-import { createState, SetInitialStateAction, State } from '@hookstate/core'
+import { createState, SetInitialStateAction, State, useHookstate } from '@hookstate/core'
 
 import { DeepReadonly } from '@xrengine/common/src/DeepReadonly'
 import multiLogger from '@xrengine/common/src/logger'
+import { resolveObject } from '@xrengine/common/src/utils/resolveObject'
 
 import { HyperFlux, HyperStore } from './StoreFunctions'
 
@@ -47,7 +48,15 @@ export function getState<S>(StateDefinition: StateDefinition<S>, store = HyperFl
   return store.valueMap[StateDefinition.name] as DeepReadonly<S>
 }
 
-export function useState<S>(StateDefinition: StateDefinition<S>, path: string, store = HyperFlux.store) {}
+export function useState<T extends unknown[], S>(
+  StateDefinition: StateDefinition<S>,
+  path: string,
+  store = HyperFlux.store
+) {
+  if (!store.stateMap[StateDefinition.name]) registerState(StateDefinition, store)
+  const state = resolveObject(path, store.stateMap[StateDefinition.name])
+  return useHookstate(store.stateMap[StateDefinition.name] as DeepReadonly<S>)
+}
 
 const stateNamespaceKey = 'ee.hyperflux'
 
