@@ -9,7 +9,7 @@ import {
   MeshStandardMaterial
 } from 'three'
 
-import { getState } from '@xrengine/hyperflux'
+import { getMutableState } from '@xrengine/hyperflux'
 
 import { loadDRACODecoder } from '../../assets/loaders/gltf/NodeDracoLoader'
 import { isNode } from '../../common/functions/getEnvironment'
@@ -121,7 +121,7 @@ export default async function SceneObjectSystem(world: World) {
   const minimumFrustumCullDistanceSqr = 5 * 5 // 5 units
 
   const execute = () => {
-    const delta = getState(EngineState).deltaSeconds.value
+    const delta = getMutableState(EngineState).deltaSeconds.value
     for (const entity of updatableQuery()) {
       const callbacks = getComponent(entity, CallbackComponent)
       callbacks.get(UpdatableCallback)?.(delta)

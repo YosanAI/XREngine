@@ -6,7 +6,7 @@ import { Engine } from '@xrengine/engine/src/ecs/classes/Engine'
 import { Entity } from '@xrengine/engine/src/ecs/classes/Entity'
 import { World } from '@xrengine/engine/src/ecs/classes/World'
 import { getAllComponents, getComponent } from '@xrengine/engine/src/ecs/functions/ComponentFunctions'
-import { getState } from '@xrengine/hyperflux'
+import { getMutableState } from '@xrengine/hyperflux'
 
 import { getSceneMetadataChanges } from '../../ecs/functions/getSceneMetadataChanges'
 import { AssetComponentType } from '../components/AssetComponent'

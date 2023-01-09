@@ -16,7 +16,7 @@ import { getComponent } from '@xrengine/engine/src/ecs/functions/ComponentFuncti
 import { EngineRendererAction, useEngineRendererState } from '@xrengine/engine/src/renderer/EngineRendererState'
 import { XRState } from '@xrengine/engine/src/xr/XRState'
 import { createXRUI } from '@xrengine/engine/src/xrui/functions/createXRUI'
-import { dispatchAction, getState, useHookstate } from '@xrengine/hyperflux'
+import { dispatchAction, getMutableState, useHookstate } from '@xrengine/hyperflux'
 
 import { BlurLinear, Mic, VolumeUp } from '@mui/icons-material'
 import SurroundSoundIcon from '@mui/icons-material/SurroundSound'
@@ -41,8 +41,8 @@ const SettingDetailView = () => {
   const { t } = useTranslation()
   const rendererState = useEngineRendererState()
   const audioState = useAudioState()
-  const xrSessionActive = useHookstate(getState(XRState).sessionActive)
-  const avatarInputState = useHookstate(getState(AvatarInputSettingsState))
+  const xrSessionActive = useHookstate(getMutableState(XRState).sessionActive)
+  const avatarInputState = useHookstate(getMutableState(AvatarInputSettingsState))
   const controlScheme = avatarInputState.controlScheme.value
   const invertRotationAndMoveSticks = avatarInputState.invertRotationAndMoveSticks.value
   const showAvatar = avatarInputState.showAvatar.value

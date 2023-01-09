@@ -1,6 +1,6 @@
 import matches from 'ts-matches'
 
-import { defineState, getState } from '@xrengine/hyperflux'
+import { defineState, getMutableState } from '@xrengine/hyperflux'
 import { defineAction } from '@xrengine/hyperflux'
 
 import { AvatarInputSettingsState } from '../avatar/state/AvatarInputSettingsState'
@@ -46,7 +46,7 @@ export const XRState = defineState({
 
 export const XRReceptors = {
   scenePlacementMode: (action: ReturnType<typeof XRAction.changePlacementMode>) => {
-    getState(XRState).scenePlacementMode.set(action.active)
+    getMutableState(XRState).scenePlacementMode.set(action.active)
   }
 }
 
@@ -81,7 +81,7 @@ export class XRAction {
 }
 
 export const getControlMode = () => {
-  const { avatarControlMode, sessionMode, sessionActive } = getState(XRState).value
+  const { avatarControlMode, sessionMode, sessionActive } = getMutableState(XRState).value
   if (!sessionActive) return 'none'
   if (avatarControlMode === 'auto') {
     return sessionMode === 'immersive-vr' || sessionMode === 'inline' || isHMD ? 'attached' : 'detached'
@@ -90,7 +90,7 @@ export const getControlMode = () => {
 }
 
 export const getAvatarHeadLock = () => {
-  const { avatarHeadLock } = getState(XRState)
+  const { avatarHeadLock } = getMutableState(XRState)
   return avatarHeadLock.value === 'auto' ? false : avatarHeadLock.value
 }
 
@@ -100,9 +100,9 @@ export const getAvatarHeadLock = () => {
  * @returns {Entity}
  */
 export const getPreferredInputSource = (inputSources: XRInputSourceArray, offhand = false) => {
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
   if (!xrState.sessionActive.value) return
-  const avatarInputSettings = getState(AvatarInputSettingsState)
+  const avatarInputSettings = getMutableState(AvatarInputSettingsState)
   for (const inputSource of inputSources) {
     if (inputSource.handedness === 'none') continue
     if (!offhand && avatarInputSettings.preferredHand.value == inputSource.handedness) return inputSource

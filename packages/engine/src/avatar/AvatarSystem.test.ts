@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-import { getState } from '@xrengine/hyperflux'
+import { getMutableState } from '@xrengine/hyperflux'
 
 import { Engine } from '../ecs/classes/Engine'
 import { createEngine } from '../initializeEngine'
@@ -42,7 +42,7 @@ describe('AvatarSystem', async () => {
 
     avatarDetailsReceptor(action)
 
-    const worldState = getState(WorldState)
+    const worldState = getMutableState(WorldState)
     assert.deepEqual(worldState.userAvatarDetails[Engine.instance.userId].value, action.avatarDetail)
   })
 })

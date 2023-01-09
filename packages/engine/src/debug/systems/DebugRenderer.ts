@@ -1,6 +1,6 @@
 import { BufferAttribute, BufferGeometry, Line, LineBasicMaterial, LineSegments, Vector3 } from 'three'
 
-import { createActionQueue, getState, removeActionQueue } from '@xrengine/hyperflux'
+import { createActionQueue, getMutableState, removeActionQueue } from '@xrengine/hyperflux'
 
 import { Engine } from '../../ecs/classes/Engine'
 import { EngineActions } from '../../ecs/classes/EngineState'
@@ -34,7 +34,7 @@ export default async function DebugRenderer(world: World) {
   const sceneLoadQueue = createActionQueue(EngineActions.sceneLoaded.matches)
 
   const execute = () => {
-    const _enabled = getState(EngineRendererState).debugEnable.value
+    const _enabled = getMutableState(EngineRendererState).debugEnable.value
     for (const action of sceneLoadQueue()) Engine.instance.currentWorld.scene.add(_lineSegments)
 
     if (enabled !== _enabled) {

@@ -12,7 +12,7 @@ import {
   Vector3
 } from 'three'
 
-import { createActionQueue, getState, removeActionQueue } from '@xrengine/hyperflux'
+import { createActionQueue, getMutableState, removeActionQueue } from '@xrengine/hyperflux'
 
 import { V_010 } from '../common/constants/MathConstants'
 import { extractRotationAboutAxis } from '../common/functions/MathFunctions'
@@ -59,7 +59,7 @@ const smoothedSceneScale = new Vector3()
  * @param entity
  */
 export const updateHitTest = (entity: Entity) => {
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
   const xrFrame = Engine.instance.xrFrame!
 
   const hitTestComponent = getComponent(entity, XRHitTestComponent)
@@ -116,7 +116,7 @@ export const getNonImmersiveHitTestTransform = (world = Engine.instance.currentW
 
 /** AR placement for non immersive / mobile session */
 export const getImmersiveHitTestTransform = (world = Engine.instance.currentWorld) => {
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
 
   const viewerHitTestEntity = xrState.viewerHitTestEntity.value
 
@@ -150,7 +150,7 @@ let lastSwipeValue = null! as null | number
  * @param world
  */
 export const updatePlacementMode = (world = Engine.instance.currentWorld) => {
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
 
   const controlMode = getControlMode()
 
@@ -217,7 +217,7 @@ export const updateWorldOrigin = (world: World, position: Vector3, rotation: Qua
 }
 
 export const updateAnchor = (entity: Entity, world = Engine.instance.currentWorld) => {
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
   const anchor = getComponent(entity, XRAnchorComponent).anchor
   const xrFrame = Engine.instance.xrFrame!
   if (anchor) {
@@ -236,7 +236,7 @@ export const updateAnchor = (entity: Entity, world = Engine.instance.currentWorl
  * @returns
  */
 export default async function XRAnchorSystem(world: World) {
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
 
   const scenePlacementEntity = createEntity()
   setComponent(scenePlacementEntity, NameComponent, 'xr-scene-placement')
@@ -271,7 +271,7 @@ export default async function XRAnchorSystem(world: World) {
         if (xrState.sessionMode.value === 'immersive-ar') {
           const session = EngineRenderer.instance.xrSession
           session.requestReferenceSpace('viewer').then((viewerReferenceSpace) => {
-            const xrState = getState(XRState)
+            const xrState = getMutableState(XRState)
             xrState.viewerReferenceSpace.set(viewerReferenceSpace)
             if ('requestHitTestSource' in session) {
               session.requestHitTestSource!({ space: viewerReferenceSpace })!

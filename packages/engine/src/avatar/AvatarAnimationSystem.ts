@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Bone, MathUtils, Quaternion, Skeleton, SkinnedMesh, Vector3 } from 'three'
 
 import { insertionSort } from '@xrengine/common/src/utils/insertionSort'
-import { defineState, getState, startReactor, useHookstate } from '@xrengine/hyperflux'
+import { defineState, getMutableState, startReactor, useHookstate } from '@xrengine/hyperflux'
 
 import { Axis } from '../common/constants/Axis3D'
 import { V_000 } from '../common/constants/MathConstants'
@@ -84,7 +84,7 @@ export default async function AvatarAnimationSystem(world: World) {
   const avatarAnimationQuery = defineQuery([AnimationComponent, AvatarAnimationComponent, AvatarRigComponent])
 
   const reactor = startReactor(() => {
-    const state = useHookstate(getState(AvatarAnimationState))
+    const state = useHookstate(getMutableState(AvatarAnimationState))
 
     useEffect(() => {
       priorityQueue.accumulationBudget = state.accumulationBudget.value
@@ -95,14 +95,14 @@ export default async function AvatarAnimationSystem(world: World) {
 
   const minimumFrustumCullDistanceSqr = 5 * 5 // 5 units
   const priorityQueue = createPriorityQueue({
-    accumulationBudget: getState(AvatarAnimationState).accumulationBudget.value
+    accumulationBudget: getMutableState(AvatarAnimationState).accumulationBudget.value
   })
 
   world.priorityAvatarEntities = priorityQueue.priorityEntities
   const filterPriorityEntities = (entity: Entity) =>
     world.priorityAvatarEntities.has(entity) || entity === world.localClientEntity
 
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
   const filterFrustumCulledEntities = (entity: Entity) =>
     !(
       DistanceFromCameraComponent.squaredDistance[entity] > minimumFrustumCullDistanceSqr &&

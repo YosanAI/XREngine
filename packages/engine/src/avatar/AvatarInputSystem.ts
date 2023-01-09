@@ -1,7 +1,7 @@
 import { Vector3 } from 'three'
 
 import { isDev } from '@xrengine/common/src/config'
-import { dispatchAction, getState } from '@xrengine/hyperflux'
+import { dispatchAction, getMutableState } from '@xrengine/hyperflux'
 
 import { EngineActions } from '../ecs/classes/EngineState'
 import { World } from '../ecs/classes/World'
@@ -17,8 +17,8 @@ import { rotateAvatar } from './functions/moveAvatar'
 import { AvatarInputSettingsState } from './state/AvatarInputSettingsState'
 
 export default async function AvatarInputSystem(world: World) {
-  const interactState = getState(InteractState)
-  const avatarInputSettingsState = getState(AvatarInputSettingsState)
+  const interactState = getMutableState(InteractState)
+  const avatarInputSettingsState = getMutableState(AvatarInputSettingsState)
 
   const onShiftLeft = () => {
     if (world.localClientEntity) {

@@ -31,7 +31,7 @@ import {
 import {
   createActionQueue,
   dispatchAction,
-  getState,
+  getMutableState,
   hookstate,
   removeActionQueue,
   startReactor,
@@ -220,7 +220,7 @@ export class EngineRenderer {
    * @param delta Time since last frame.
    */
   execute(delta: number): void {
-    const activeSession = getState(XRState).sessionActive.value
+    const activeSession = getMutableState(XRState).sessionActive.value
 
     /** Postprocessing does not support multipass yet, so just use basic renderer when in VR */
     if ((isHMD && activeSession) || EngineRenderer.instance.xrSession) {

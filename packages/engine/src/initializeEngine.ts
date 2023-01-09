@@ -2,7 +2,7 @@ import { detect, detectOS } from 'detect-browser'
 import _ from 'lodash'
 
 import { BotUserAgent } from '@xrengine/common/src/constants/BotUserAgent'
-import { addActionReceptor, dispatchAction, getState } from '@xrengine/hyperflux'
+import { addActionReceptor, dispatchAction, getMutableState } from '@xrengine/hyperflux'
 
 import { createGLTFLoader } from './assets/functions/createGLTFLoader'
 import { Timer } from './common/functions/Timer'
@@ -115,7 +115,7 @@ export const initializeNode = () => {
 }
 
 const executeWorlds = (elapsedTime) => {
-  const engineState = getState(EngineState)
+  const engineState = getMutableState(EngineState)
   engineState.frameTime.set(elapsedTime)
   for (const world of Engine.instance.worlds) {
     world.execute(elapsedTime)

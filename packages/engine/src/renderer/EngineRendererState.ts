@@ -1,5 +1,5 @@
 import { matches, Validator } from '@xrengine/engine/src/common/functions/MatchesUtils'
-import { defineAction, defineState, getState, syncStateWithLocalStorage, useState } from '@xrengine/hyperflux'
+import { defineAction, defineState, getMutableState, syncStateWithLocalStorage, useState } from '@xrengine/hyperflux'
 
 import { isHMD, isMobile, isMobileOrHMD } from '../common/functions/isMobile'
 import { Engine } from '../ecs/classes/Engine'
@@ -39,7 +39,7 @@ export const EngineRendererState = defineState({
   }
 })
 
-export const accessEngineRendererState = () => getState(EngineRendererState)
+export const accessEngineRendererState = () => getMutableState(EngineRendererState)
 export const useEngineRendererState = () => useState(accessEngineRendererState())
 
 function setQualityLevel(qualityLevel) {
@@ -53,7 +53,7 @@ function setUseShadows() {
 }
 
 function setUsePostProcessing(usePostProcessing) {
-  if (getState(EngineRendererState).usePostProcessing.value === usePostProcessing) return
+  if (getMutableState(EngineRendererState).usePostProcessing.value === usePostProcessing) return
   usePostProcessing = EngineRenderer.instance.supportWebGL2 && usePostProcessing
 
   configureEffectComposer(!usePostProcessing)
@@ -61,53 +61,53 @@ function setUsePostProcessing(usePostProcessing) {
 
 export class EngineRendererReceptor {
   static setQualityLevel(action: typeof EngineRendererAction.setQualityLevel.matches._TYPE) {
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ qualityLevel: action.qualityLevel })
     setQualityLevel(action.qualityLevel)
   }
 
   static setAutomatic(action: typeof EngineRendererAction.setAutomatic.matches._TYPE) {
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ automatic: action.automatic })
   }
 
   static setPostProcessing(action: typeof EngineRendererAction.setPostProcessing.matches._TYPE) {
     if (action.usePostProcessing && isHMD) return
     setUsePostProcessing(action.usePostProcessing)
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ usePostProcessing: action.usePostProcessing })
   }
 
   static setShadows(action: typeof EngineRendererAction.setShadows.matches._TYPE) {
     if (action.useShadows && isHMD) return
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ useShadows: action.useShadows })
     setUseShadows()
   }
 
   static setDebug(action: typeof EngineRendererAction.setDebug.matches._TYPE) {
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ debugEnable: action.debugEnable })
   }
 
   static changedRenderMode(action: typeof EngineRendererAction.changedRenderMode.matches._TYPE) {
     changeRenderMode(action.renderMode)
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ renderMode: action.renderMode })
   }
 
   static changeNodeHelperVisibility(action: typeof EngineRendererAction.changeNodeHelperVisibility.matches._TYPE) {
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ nodeHelperVisibility: action.visibility })
   }
 
   static changeGridToolHeight(action: typeof EngineRendererAction.changeGridToolHeight.matches._TYPE) {
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ gridHeight: action.gridHeight })
   }
 
   static changeGridToolVisibility(action: typeof EngineRendererAction.changeGridToolVisibility.matches._TYPE) {
-    const s = getState(EngineRendererState)
+    const s = getMutableState(EngineRendererState)
     s.merge({ gridVisibility: action.visibility })
   }
 }

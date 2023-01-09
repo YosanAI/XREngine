@@ -2,7 +2,7 @@ import { entityExists, Not } from 'bitecs'
 import { Camera, Frustum, Matrix4, Mesh, Skeleton, SkinnedMesh, Vector3 } from 'three'
 
 import { insertionSort } from '@xrengine/common/src/utils/insertionSort'
-import { createActionQueue, getState, removeActionQueue } from '@xrengine/hyperflux'
+import { createActionQueue, getMutableState, removeActionQueue } from '@xrengine/hyperflux'
 
 import { updateReferenceSpace } from '../../avatar/functions/moveAvatar'
 import { V_000 } from '../../common/constants/MathConstants'
@@ -245,7 +245,7 @@ export default async function TransformSystem(world: World) {
 
     // if transform order is dirty, sort by reference depth
     // Note: cyclic references will cause undefined behavior
-    const { transformsNeedSorting } = getState(EngineState)
+    const { transformsNeedSorting } = getMutableState(EngineState)
 
     let needsSorting = transformsNeedSorting.value
 
@@ -273,7 +273,7 @@ export default async function TransformSystem(world: World) {
 
     // lerp clean dynamic rigidbody entities (make them dirty)
     const fixedRemainder = world.elapsedSeconds - world.fixedElapsedSeconds
-    const alpha = Math.min(fixedRemainder / getState(EngineState).fixedDeltaSeconds.value, 1)
+    const alpha = Math.min(fixedRemainder / getMutableState(EngineState).fixedDeltaSeconds.value, 1)
     for (const entity of cleanDynamicRigidbodyEntities) lerpTransformFromRigidbody(entity, alpha)
 
     // entities with dirty parent or reference entities, or computed transforms, should also be dirty

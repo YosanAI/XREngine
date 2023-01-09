@@ -1,7 +1,7 @@
 import { Collider } from '@dimforge/rapier3d-compat'
 import { Quaternion, Vector3 } from 'three'
 
-import { getState } from '@xrengine/hyperflux'
+import { getMutableState } from '@xrengine/hyperflux'
 
 import { ObjectDirection } from '../../common/constants/Axis3D'
 import { V_010 } from '../../common/constants/MathConstants'
@@ -109,7 +109,7 @@ export const updateAvatarControllerOnGround = (entity: Entity) => {
  */
 export const moveAvatarWithVelocity = (entity: Entity) => {
   const isInVR = getControlMode() === 'attached'
-  const avatarInputState = getState(AvatarInputSettingsState)
+  const avatarInputState = getMutableState(AvatarInputSettingsState)
   if (isInVR && avatarInputState.controlScheme.value !== AvatarMovementScheme.Linear) {
     return
   }
@@ -145,7 +145,7 @@ export const avatarApplyRotation = (entity: Entity) => {
 export const avatarApplyVelocity = (entity: Entity, forwardOrientation: Quaternion) => {
   const controller = getComponent(entity, AvatarControllerComponent) as ComponentType<typeof AvatarControllerComponent>
   const rigidBody = getComponent(entity, RigidBodyComponent)
-  const timeStep = getState(EngineState).fixedDeltaSeconds.value
+  const timeStep = getMutableState(EngineState).fixedDeltaSeconds.value
   const isInVR = getControlMode() === 'attached'
 
   // always walk in VR
@@ -220,7 +220,7 @@ const quat = new Quaternion()
  * @param entity
  */
 export const updateReferenceSpace = (entity: Entity) => {
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
   const viewerPose = Engine.instance.xrFrame?.getViewerPose(xrState.originReferenceSpace.value!)
   const refSpace = xrState.originReferenceSpace.value
 

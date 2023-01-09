@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Matrix4, Quaternion, Vector3 } from 'three'
 
 import config from '@xrengine/common/src/config'
-import { dispatchAction, getState, startReactor } from '@xrengine/hyperflux'
+import { dispatchAction, getMutableState, startReactor } from '@xrengine/hyperflux'
 
 import { GLTFLoader } from '../../assets/loaders/gltf/GLTFLoader'
 import { FollowCameraComponent } from '../../camera/components/FollowCameraComponent'
@@ -277,7 +277,7 @@ const vpsQuery = defineQuery([PersistentAnchorComponent])
 
 export default async function XR8System(world: World) {
   let _8thwallScripts = null as XR8Assets | null
-  const xrState = getState(XRState)
+  const xrState = getMutableState(XRState)
 
   const using8thWall = isMobile && (!navigator.xr || !(await navigator.xr.isSessionSupported('immersive-ar')))
 

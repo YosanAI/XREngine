@@ -1,6 +1,6 @@
 import { Matrix4, Quaternion, Vector3 } from 'three'
 
-import { addActionReceptor, dispatchAction, getState } from '@xrengine/hyperflux'
+import { addActionReceptor, dispatchAction, getMutableState } from '@xrengine/hyperflux'
 
 import { FollowCameraComponent } from '../camera/components/FollowCameraComponent'
 import { V_000, V_010 } from '../common/constants/MathConstants'
@@ -130,7 +130,7 @@ const _cameraDirection = new Vector3()
 const _mat = new Matrix4()
 
 export const rotateBodyTowardsCameraDirection = (entity: Entity) => {
-  const fixedDeltaSeconds = getState(EngineState).fixedDeltaSeconds.value
+  const fixedDeltaSeconds = getMutableState(EngineState).fixedDeltaSeconds.value
   const rigidbody = getComponent(entity, RigidBodyComponent)
   if (!rigidbody) return
 
@@ -163,7 +163,7 @@ export const rotateBodyTowardsVector = (entity: Entity, vector: Vector3) => {
   if (isZero) _velXZ.copy(prevVector)
   if (!isZero) prevVector.copy(_velXZ)
 
-  const fixedDeltaSeconds = getState(EngineState).fixedDeltaSeconds.value
+  const fixedDeltaSeconds = getMutableState(EngineState).fixedDeltaSeconds.value
 
   rotMatrix.lookAt(_velXZ, V_000, V_010)
   targetOrientation.setFromRotationMatrix(rotMatrix)

@@ -1,6 +1,6 @@
 import { Object3D, Vector3 } from 'three'
 
-import { createActionQueue, dispatchAction, getState, removeActionQueue } from '@xrengine/hyperflux'
+import { createActionQueue, dispatchAction, getMutableState, removeActionQueue } from '@xrengine/hyperflux'
 
 import { isClient } from '../common/functions/isClient'
 import { proxifyQuaternion, proxifyVector3 } from '../common/proxies/createThreejsProxy'
@@ -34,7 +34,7 @@ export function avatarDetailsReceptor(
   action: ReturnType<typeof WorldNetworkAction.avatarDetails>,
   world = Engine.instance.currentWorld
 ) {
-  const userAvatarDetails = getState(WorldState).userAvatarDetails
+  const userAvatarDetails = getMutableState(WorldState).userAvatarDetails
   userAvatarDetails[action.$from].set(action.avatarDetail)
   if (isClient && action.avatarDetail.avatarURL) {
     const entity = world.getUserAvatarEntity(action.$from)

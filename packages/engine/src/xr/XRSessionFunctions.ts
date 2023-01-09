@@ -1,5 +1,5 @@
 import { createHookableFunction } from '@xrengine/common/src/utils/createHookableFunction'
-import { dispatchAction, getState, none } from '@xrengine/hyperflux'
+import { dispatchAction, getMutableState, none } from '@xrengine/hyperflux'
 
 import { AvatarHeadDecapComponent } from '../avatar/components/AvatarIKComponents'
 import { FollowCameraComponent } from '../camera/components/FollowCameraComponent'
@@ -22,7 +22,7 @@ const skyboxQuery = defineQuery([SkyboxComponent])
  */
 export const requestXRSession = createHookableFunction(
   async (action: typeof XRAction.requestSession.matches._TYPE): Promise<void> => {
-    const xrState = getState(XRState)
+    const xrState = getMutableState(XRState)
     const xrManager = EngineRenderer.instance.xrManager
 
     if (xrState.requestingSession.value || xrState.sessionActive.value) return

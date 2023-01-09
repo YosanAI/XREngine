@@ -4,7 +4,7 @@ import { MathUtils } from 'three'
 import { EntityUUID } from '@xrengine/common/src/interfaces/EntityUUID'
 import { ComponentJson, EntityJson, SceneData, SceneJson } from '@xrengine/common/src/interfaces/SceneInterface'
 import logger from '@xrengine/common/src/logger'
-import { dispatchAction, getState, NO_PROXY } from '@xrengine/hyperflux'
+import { dispatchAction, getMutableState, NO_PROXY } from '@xrengine/hyperflux'
 import { getSystemsFromSceneData } from '@xrengine/projects/loadSystemInjection'
 
 import { Engine } from '../../ecs/classes/Engine'
@@ -178,7 +178,7 @@ export const updateSceneEntitiesFromJSON = (parent: string, world = Engine.insta
  */
 export const updateSceneFromJSON = async (sceneData: SceneData) => {
   const world = Engine.instance.currentWorld
-  getState(EngineState).sceneLoading.set(true)
+  getMutableState(EngineState).sceneLoading.set(true)
 
   const systemsToLoad = [] as SystemModuleType<any>[]
 
@@ -239,7 +239,7 @@ export const updateSceneFromJSON = async (sceneData: SceneData) => {
   updateSceneEntitiesFromJSON(sceneData.scene.root, world)
 
   if (!sceneAssetPendingTagQuery().length) {
-    if (getState(EngineState).sceneLoading.value) dispatchAction(EngineActions.sceneLoaded({}))
+    if (getMutableState(EngineState).sceneLoading.value) dispatchAction(EngineActions.sceneLoaded({}))
   }
 }
 
@@ -350,7 +350,7 @@ export default async function SceneLoadingSystem(world: World) {
   }
 
   const execute = () => {
-    if (!getState(EngineState).sceneLoading.value) return
+    if (!getMutableState(EngineState).sceneLoading.value) return
 
     const pendingAssets = sceneAssetPendingTagQuery().length
 

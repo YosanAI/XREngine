@@ -1,7 +1,7 @@
 import { Not } from 'bitecs'
 import { Quaternion, Vector3 } from 'three'
 
-import { createActionQueue, getState, removeActionQueue } from '@xrengine/hyperflux'
+import { createActionQueue, getMutableState, removeActionQueue } from '@xrengine/hyperflux'
 
 import { Engine } from '../../ecs/classes/Engine'
 import { EngineActions, EngineState } from '../../ecs/classes/EngineState'
@@ -82,7 +82,7 @@ export default async function PhysicsSystem(world: World) {
     { name: SCENE_COMPONENT_COLLIDER, props: SCENE_COMPONENT_COLLIDER_DEFAULT_VALUES }
   ])
 
-  const engineState = getState(EngineState)
+  const engineState = getMutableState(EngineState)
 
   const colliderQuery = defineQuery([ColliderComponent, Not(GLTFLoadedComponent)])
   const groupColliderQuery = defineQuery([ColliderComponent, GLTFLoadedComponent])

@@ -37,7 +37,7 @@ import {
   addActionReceptor,
   createActionQueue,
   dispatchAction,
-  getState,
+  getMutableState,
   removeActionQueue,
   startReactor,
   useHookstate
@@ -74,9 +74,7 @@ export default async function WidgetSystem(world: World) {
 
   addComponent(widgetMenuUI.entity, NameComponent, 'widget_menu')
 
-  const avatarInputSettings = getState(AvatarInputSettingsState)
-
-  const widgetState = getState(WidgetAppState)
+  const widgetState = getMutableState(WidgetAppState)
 
   // lazily create XRUI widgets to speed up initial page loading time
   let createdWidgets = false
