@@ -8,4 +8,14 @@ export interface StaticResourceInterface {
   staticResourceType: string
   userId: string
   project?: string
+  driver?: string
+  fullQualityURL?: string
+  lowQualityURL?: string
+  mobileQualityURL?: string
+  fullQualitySize?: number
+  lowQualitySize?: number
+  mobileQualitySize?: number
+  attribution?: string
+  licensing?: string
+  tags?: string[]
 }

@@ -6,4 +6,14 @@ export interface StaticResourceInterface {
   mimeType: string
   metadata: any
   project?: string
+  driver?: string
+  fullQualityURL?: string
+  lowQualityURL?: string
+  mobileQualityURL?: string
+  fullQualitySize?: number
+  lowQualitySize?: number
+  mobileQualitySize?: number
+  attribution?: string
+  licensing?: string
+  tags?: string[]
 }

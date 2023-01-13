@@ -37,6 +37,36 @@ export default (app: Application) => {
       project: {
         type: DataTypes.STRING,
         allowNull: true
+      },
+      driver: {
+        type: DataTypes.STRING
+      },
+      fullQualityURL: {
+        type: DataTypes.STRING
+      },
+      lowQualityURL: {
+        type: DataTypes.STRING
+      },
+      mobileQualityURL: {
+        type: DataTypes.STRING
+      },
+      fullQualitySize: {
+        type: DataTypes.NUMBER
+      },
+      lowQualitySize: {
+        type: DataTypes.NUMBER
+      },
+      mobileQualitySize: {
+        type: DataTypes.NUMBER
+      },
+      licensing: {
+        type: DataTypes.STRING
+      },
+      attribution: {
+        type: DataTypes.STRING
+      },
+      tags: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
       }
     },
     {
